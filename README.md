@@ -3,6 +3,9 @@
 ## Overview
 This is a Django-based web application for managing a restaurant. It includes features for handling menus, orders, and customer information, making it easier to manage a restaurant's daily operations.
 
+
+**Note:** This project is currently in development. Features and functionality are subject to change.
+
 ## Features
 - **Menu Management:** Create, update, and delete menu items.
 - **Order Management:** Place and track customer orders.
