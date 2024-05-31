@@ -74,8 +74,13 @@
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">User Account</a>
                                 <div class="dropdown-menu">
-                                    <a href="#" class="dropdown-item">Login</a>
-                                    <a href="#" class="dropdown-item">Register</a>
+                                    {% if request.user.is_authenticated %}
+                                    <a href="#" class="dropdown-item">Hello, {{ request.user.username }}</a>
+                                    <a href="#" class="dropdown-item">Logout</a>
+                                    {% else %}
+                                    <a href="{% url 'userauths:login' %}" class="dropdown-item">Login</a>
+                                    <a href="{% url 'userauths:signup' %}" class="dropdown-item">Register</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -116,6 +121,22 @@
                     </div>
                 </div>
             </div>
+                {% if messages %}
+                <div id="alert-container">
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                            <strong>{{ message }}</strong>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <script>
+                    $(document).ready(function() {
+                     setTimeout(function() {
+                        $('.alert').fadeOut('slow');
+                    }, 3000);
+                    });
+                </script>
         </div>
         <!-- Bottom Bar End -->    
  {% block content%}

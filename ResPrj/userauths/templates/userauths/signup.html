@@ -4,104 +4,58 @@
 {% load static %}
 
 
+<div class="login">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">    
+                <div class="register-form">
+                    <div class="row">
+                        {% if form.errors %}
+                        <div  class="alert alert-danger">
+                            <strong>{{form.errors}}</strong>
 
-        {% comment %} <!-- Reservations Section Start -->
-        <section id="reservations">
-            <div class="container">
-                <header class="section-header">
-                    <h3>Reservations</h3>
-                </header>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-row">
-                            <div class="control-group col-sm-3">
-                                <div class="form-group">
-                                    <div class="input-group date" id="date" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" placeholder="Date" data-target="#date"/>
-                                        <div class="input-group-append" data-target="#date" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group col-sm-3">
-                                <div class="form-group">
-                                    <div class="input-group date" id="time" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" placeholder="Time" data-target="#time"/>
-                                        <div class="input-group-append" data-target="#time" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group col-sm-3">
-                                <select class="custom-select">
-                                    <option selected>Party Size</option>
-                                    <option value="1">1 Person</option>
-                                    <option value="2">2 People</option>
-                                    <option value="3">3 People</option>
-                                    <option value="4">4 People</option>
-                                    <option value="5">5 People</option>
-                                    <option value="6">6 People</option>
-                                    <option value="7">7 People</option>
-                                    <option value="8">8 People</option>
-                                    <option value="9">9 People</option>
-                                    <option value="10">10 People</option>
-                                </select>
-                            </div>
-                            <div class="control-group col-sm-3">
-                                <button class="btn btn-block btn-book">Book Now</button>
-                            </div>
                         </div>
+                            {% endif  %}
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <div class="col-md-6">
+                                <label>Username</label>
+                                {% comment %} <input class="form-control" type="text" placeholder="First Name"> {% endcomment %}
+                                {{form.username}}
+                            </div>
+                            {% comment %} <div class="col-md-6">
+                                <label>Last Name</label>
+                                <input class="form-control" type="text" placeholder="Last Name">
+                            </div> {% endcomment %}
+                            <div class="col-md-6">
+                                <label>E-mail</label>
+                                {% comment %} <input class="form-control" type="text" placeholder="E-mail"> {% endcomment %}
+                                {{form.email}}
+                            </div>
+                            {% comment %} <div class="col-md-6">
+                                <label>Mobile No</label>
+                                <input class="form-control" type="text" placeholder="Mobile No">
+                            </div> {% endcomment %}
+                            <div class="col-md-6">
+                                <label>Password</label>
+                                {% comment %} <input class="form-control" type="text" placeholder="Password"> {% endcomment %}
+                                {{form.password1}}
+                            </div>
+                            <div class="col-md-6">
+                                <label>Retype Password</label>
+                                {% comment %} <input class="form-control" type="text" placeholder="Password"> {% endcomment %}
+                                {{form.password2}}
+                            </div>
+                            <br>
+                            <p>Already have an account? <a href="{% url 'userauths:login' %}">Login</a> </p>
+                            <div class="col-md-12">
+                                <button type="submit" class="btn">Submit</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
-        </section>
-        <!-- Reservations Section End --> {% endcomment %}
-
-<section id="login">
-    {% if form.errors %}
-    <div>
-        <strong>{{form.errors}}</strong>
+          </div>
+        </div>
     </div>
-    {% endif %}
-	<div class="container">
-		<div class="section-header">
-			<h3 class="d-flex">Registration</h3>
-		</div>
-
-		<div class="row">
-			<div class="col-md-6">
-				<div class="login-col-1">
-					<div class="login-form">
-                        <form method="post">
-                            {% csrf_token %}
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    {{ form.username.label_tag }} {{ form.username }}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    {{ form.email.label_tag }} {{ form.email }}
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    {{ form.password1.label_tag }} {{ form.password1 }}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    {{ form.password2.label_tag }} {{ form.password2 }}
-                                </div>
-                            </div>
-                            <div><button type="submit" class="btn btn-primary">Sign Up</button></div>
-                            <p>Already have an account? <a href="{% url 'userauths:login' %}">Login</a></p>
-                        </form>
-					</div>
-				</div>
-			</div>
-
-			
-		</div>
-	</div>
-</section>
-
+</div>
 {% endblock content %}

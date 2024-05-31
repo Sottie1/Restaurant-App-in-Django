@@ -3,113 +3,38 @@
 {% block content %}
 {% load static %}
 
-
-
-        <!-- Reservations Section Start -->
-        <section id="reservations">
-            <div class="container">
-                <header class="section-header">
-                    <h3>Reservations</h3>
-                </header>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-row">
-                            <div class="control-group col-sm-3">
-                                <div class="form-group">
-                                    <div class="input-group date" id="date" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" placeholder="Date" data-target="#date"/>
-                                        <div class="input-group-append" data-target="#date" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                        </div>
-                                    </div>
+<div class="login">
+    <div class="container-fluid">
+        <div>
+            <div class="col-lg-6">
+                <div class="login-form">
+                    <div class="row">
+                        <form class="login-form" action="">
+                            {% csrf_token %}
+                            <div class="col-md-6">
+                                <label>E-mail / Username</label>
+                                <input class="form-control" type="text" placeholder="E-mail or Username" style="width: 100%; height: 50px; font-size: 18px; padding: 10px;">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Password</label>
+                                <input class="form-control" type="text" placeholder="Password" style="width: 100%; height: 50px; font-size: 18px; padding: 10px;">
+                            </div>
+                            <div class="col-md-12">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="newaccount">
+                                    <label class="custom-control-label" for="newaccount">Keep me signed in</label>
                                 </div>
                             </div>
-                            <div class="control-group col-sm-3">
-                                <div class="form-group">
-                                    <div class="input-group date" id="time" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" placeholder="Time" data-target="#time"/>
-                                        <div class="input-group-append" data-target="#time" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-md-12">
+                                <button type="submit" class="btn">Submit</button>
                             </div>
-                            <div class="control-group col-sm-3">
-                                <select class="custom-select">
-                                    <option selected>Party Size</option>
-                                    <option value="1">1 Person</option>
-                                    <option value="2">2 People</option>
-                                    <option value="3">3 People</option>
-                                    <option value="4">4 People</option>
-                                    <option value="5">5 People</option>
-                                    <option value="6">6 People</option>
-                                    <option value="7">7 People</option>
-                                    <option value="8">8 People</option>
-                                    <option value="9">9 People</option>
-                                    <option value="10">10 People</option>
-                                </select>
-                            </div>
-                            <div class="control-group col-sm-3">
-                                <button class="btn btn-block btn-book">Book Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Reservations Section End -->
-
-        <!-- Login Section Start -->
-        <section id="login">
-            <div class="container">
-                <div class="section-header">
-                    <h3 class="d-flex"> Login</h3>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="login-col-2">
-                            <div class="login-form">
-                                <form method="POST">
-                                    {% csrf_token %}
-                                    <div class="form-group">
-                                        <input type="email" class="form-control" placeholder="Your Email" required="required" />
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="password" class="form-control" placeholder="Your Password" required="required" />
-                                    </div>
-                                    <div><button type="submit">Login</button></div>
-									<br>
-									<p>Do not have an account?<a href="{% url 'core:signup' %}">sign up</a></p>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Login Section End -->
-
-        <!-- Subscriber Section Start -->
-        <section id="subscriber">
-            <div class="container">
-                <div class="section-header">
-                    <h3>Get Latest Food Info</h3>
-                </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <form class="form-inline">
-                            <div class="form-group">
-                                <input type="email" class="form-control" placeholder="Enter Your Email">
-                            </div>
-                            <button type="submit" class="btn">Submit</button>
                         </form>
+                        
                     </div>
                 </div>
             </div>
-        </section>
-        <!-- Subscriber Section end -->
+        </div>
+    </div>
+</div>
 
-        <!-- Footer Start -->
 {% endblock content %}

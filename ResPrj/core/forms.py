@@ -1,5 +1,5 @@
 from django import forms
-from .models import contact
+from .models import contact, MenuReview
 
 
 class contactForm(forms.ModelForm):
@@ -8,3 +8,11 @@ class contactForm(forms.ModelForm):
         fields = ['name', 'email', 'phone', 'subject', 'message',]
 
        
+
+
+class MenuReviewForm(forms.ModelForm):
+    
+
+    class Meta:
+        model = MenuReview
+        fields = ['name', 'email', 'text']

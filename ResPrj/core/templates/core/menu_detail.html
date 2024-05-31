@@ -1,4 +1,6 @@
 {% extends 'partials/base.html'%}
+{% load custom_filters %}
+
 
 {% block content %}
 {% load static %}
@@ -13,7 +15,7 @@
 						<div class="row align-items-center">
 							<div class="col-md-5">
 								<div class="product-image">
-									<img src="{{ menud.image.url }}" alt="Product Image">
+									<img src="{% static '{{ menud.image.url }}' %}" alt="Product Image">
 								
 								</div>
 								<div class="product-slider-single-nav normal-slider">
@@ -66,7 +68,7 @@
 									<a class="nav-link" data-toggle="pill" href="#specification">Specification</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" data-toggle="pill" href="#reviews">Reviews (1)</a>
+									<a class="nav-link" data-toggle="pill" href="#reviews">Reviews ({{review.count}})</a>
 								</li>
 							</ul>
 
@@ -81,59 +83,74 @@
 									<h4>Product specification</h4>
 									<p>{{menud.specification|safe}}</p>
 								</div>
-								<div id="reviews" class="container tab-pane fade">
-									<div class="reviews-submitted">
-										<div class="reviewer">Phasellus Gravida - <span>01 Jan 2020</span></div>
-										<div class="ratting">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
+
+								{% if make_review %}
+									{% if request.user.is_authenticated %}
+									<div id="reviews" class="container tab-pane fade">
+										<div class="reviews-submitted">
+											{% for review in reviews %}
+											<div class="reviewer">{{ review.name }} - <span>{{ review.created_at }}</span></div>
+											<div class="ratting">
+												{% for i in 5|range_filter %}
+													{% if i < review.rating %}
+														<i class="fa fa-star"></i>
+													{% else %}
+														<i class="far fa-star"></i>
+													{% endif %}
+												{% endfor %}
+											</div>
+											<p>{{ review.text }}</p>
+											{% endfor %}
 										</div>
-										<p>
-											Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
-										</p>
+										<div class="reviews-submit">
+											<h4>Give your Review:</h4>
+											<form method="post" action="{% url 'submit_review' %}">
+												{% csrf_token %}
+												{{ form.as_p }}
+												<div class="ratting">
+													<i class="far fa-star"></i>
+													<i class="far fa-star"></i>
+													<i class="far fa-star"></i>
+													<i class="far fa-star"></i>
+													<i class="far fa-star"></i>
+												</div>
+												<div class="row form">
+													<div class="col-sm-6">
+														{{ form.name }}
+													</div>
+													<div class="col-sm-6">
+														{{ form.email }}
+													</div>
+													<div class="col-sm-12">
+														{{ form.text }}
+													</div>
+													<div class="col-sm-12">
+														<button type="submit">Submit</button>
+													</div>
+												</div>
+											</form>
+										</div>
 									</div>
-									<div class="reviews-submit">
-										<h4>Give your Review:</h4>
-										<div class="ratting">
-											<i class="far fa-star"></i>
-											<i class="far fa-star"></i>
-											<i class="far fa-star"></i>
-											<i class="far fa-star"></i>
-											<i class="far fa-star"></i>
-										</div>
-										<div class="row form">
-											<div class="col-sm-6">
-												<input type="text" placeholder="Name">
-											</div>
-											<div class="col-sm-6">
-												<input type="email" placeholder="Email">
-											</div>
-											<div class="col-sm-12">
-												<textarea placeholder="Review"></textarea>
-											</div>
-											<div class="col-sm-12">
-												<button>Submit</button>
-											</div>
-										</div>
-									</div>
-								</div>
+									{% endif %}
+								{% endif %}
+
+
 							</div>
 						</div>
 					</div>
 					
 					<div class="product">
+						{% if menus %}
 						<div class="section-header">
 							<h1>Related Products</h1>
 						</div>
-
+						{% endif %}
 						<div class="row align-items-center product-slider product-slider-3">
+							{% for m in menus %}
 							<div class="col-lg-3">
 								<div class="product-item">
 									<div class="product-title">
-										<a href="#">Product Name</a>
+										<a href="#">{{m.title}}</a>
 										<div class="ratting">
 											<i class="fa fa-star"></i>
 											<i class="fa fa-star"></i>
@@ -144,7 +161,7 @@
 									</div>
 									<div class="product-image">
 										<a href="product-detail.html">
-											<img src="img/product-10.jpg" alt="Product Image">
+											<img src="{{m.image.url}} " alt="Product Image">
 										</a>
 										<div class="product-action">
 											<a href="#"><i class="fa fa-cart-plus"></i></a>
@@ -153,123 +170,13 @@
 										</div>
 									</div>
 									<div class="product-price">
-										<h3><span>$</span>99</h3>
+										<h3><span>₵</span>{{m.price}}</h3>
 										<a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
 									</div>
 								</div>
 							</div>
-							<div class="col-lg-3">
-								<div class="product-item">
-									<div class="product-title">
-										<a href="#">Product Name</a>
-										<div class="ratting">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<div class="product-image">
-										<a href="product-detail.html">
-											<img src="img/product-8.jpg" alt="Product Image">
-										</a>
-										<div class="product-action">
-											<a href="#"><i class="fa fa-cart-plus"></i></a>
-											<a href="#"><i class="fa fa-heart"></i></a>
-											<a href="#"><i class="fa fa-search"></i></a>
-										</div>
-									</div>
-									<div class="product-price">
-										<h3><span>$</span>99</h3>
-										<a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-3">
-								<div class="product-item">
-									<div class="product-title">
-										<a href="#">Product Name</a>
-										<div class="ratting">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<div class="product-image">
-										<a href="product-detail.html">
-											<img src="img/product-6.jpg" alt="Product Image">
-										</a>
-										<div class="product-action">
-											<a href="#"><i class="fa fa-cart-plus"></i></a>
-											<a href="#"><i class="fa fa-heart"></i></a>
-											<a href="#"><i class="fa fa-search"></i></a>
-										</div>
-									</div>
-									<div class="product-price">
-										<h3><span>$</span>99</h3>
-										<a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-3">
-								<div class="product-item">
-									<div class="product-title">
-										<a href="#">Product Name</a>
-										<div class="ratting">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<div class="product-image">
-										<a href="product-detail.html">
-											<img src="img/product-4.jpg" alt="Product Image">
-										</a>
-										<div class="product-action">
-											<a href="#"><i class="fa fa-cart-plus"></i></a>
-											<a href="#"><i class="fa fa-heart"></i></a>
-											<a href="#"><i class="fa fa-search"></i></a>
-										</div>
-									</div>
-									<div class="product-price">
-										<h3><span>$</span>99</h3>
-										<a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-3">
-								<div class="product-item">
-									<div class="product-title">
-										<a href="#">Product Name</a>
-										<div class="ratting">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<div class="product-image">
-										<a href="product-detail.html">
-											<img src="img/product-2.jpg" alt="Product Image">
-										</a>
-										<div class="product-action">
-											<a href="#"><i class="fa fa-cart-plus"></i></a>
-											<a href="#"><i class="fa fa-heart"></i></a>
-											<a href="#"><i class="fa fa-search"></i></a>
-										</div>
-									</div>
-									<div class="product-price">
-										<h3><span>$</span>99</h3>
-										<a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
-									</div>
-								</div>
-							</div>
+							{% endfor %}
+							
 						</div>
 					</div>
 				</div>
@@ -314,7 +221,7 @@
 								</div>
 								<div class="product-image">
 									<a href="product-detail.html">
-										<img src="img/product-7.jpg" alt="Product Image">
+										<img src="{% static 'img/product-7.jpg' %}" alt="Product Image">
 									</a>
 									<div class="product-action">
 										<a href="#"><i class="fa fa-cart-plus"></i></a>
@@ -340,7 +247,7 @@
 								</div>
 								<div class="product-image">
 									<a href="product-detail.html">
-										<img src="img/product-8.jpg" alt="Product Image">
+										<img src="{% static 'img/product-8.jpg' %}" alt="Product Image">
 									</a>
 									<div class="product-action">
 										<a href="#"><i class="fa fa-cart-plus"></i></a>
@@ -366,7 +273,7 @@
 								</div>
 								<div class="product-image">
 									<a href="product-detail.html">
-										<img src="img/product-9.jpg" alt="Product Image">
+										<img src="{% static 'img/product-9.jpg' %}" alt="Product Image">
 									</a>
 									<div class="product-action">
 										<a href="#"><i class="fa fa-cart-plus"></i></a>
@@ -420,12 +327,12 @@
         <div class="brand">
             <div class="container-fluid">
                 <div class="brand-slider">
-                    <div class="brand-item"><img src="img/brand-1.png" alt=""></div>
-                    <div class="brand-item"><img src="img/brand-2.png" alt=""></div>
-                    <div class="brand-item"><img src="img/brand-3.png" alt=""></div>
-                    <div class="brand-item"><img src="img/brand-4.png" alt=""></div>
-                    <div class="brand-item"><img src="img/brand-5.png" alt=""></div>
-                    <div class="brand-item"><img src="img/brand-6.png" alt=""></div>
+                    <div class="brand-item"><img src="{% static 'img/brand-1.png' %}" alt=""></div>
+                    <div class="brand-item"><img src="{% static 'img/brand-2.png' %}" alt=""></div>
+                    <div class="brand-item"><img src="{% static 'img/brand-3.png' %}" alt=""></div>
+                    <div class="brand-item"><img src="{% static 'img/brand-4.png' %}" alt=""></div>
+                    <div class="brand-item"><img src="{% static 'img/brand-5.png' %}" alt=""></div>
+                    <div class="brand-item"><img src="{% static 'img/brand-6.png' %}" alt=""></div>
                 </div>
             </div>
         </div>

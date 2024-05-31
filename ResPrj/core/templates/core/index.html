@@ -27,40 +27,40 @@
                     <div class="col-md-6">
                         <div class="header-slider normal-slider">
                             <div class="header-slider-item">
-                                <img src="{% static 'img/slider-1.jpg' %}" alt="Slider Image" />
-                                <div class="header-slider-caption">
+                                <img src="{% static 'img/slider 1.jpg' %}" alt="Slider Image" />
+                                 {% comment %} <div class="header-slider-caption">
                                     <p>Some text goes here that describes the image</p>
                                     <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Shop Now</a>
-                                </div>
+                                </div> {% endcomment %}
                             </div>
                             <div class="header-slider-item">
-                                <img src="{% static 'img/slider-2.jpg' %}" alt="Slider Image" />
-                                <div class="header-slider-caption">
+                                <img src="{% static 'img/slider 2.jpg' %}" alt="Slider Image" />
+                                {% comment %} <div class="header-slider-caption">
                                     <p>Some text goes here that describes the image</p>
                                     <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Shop Now</a>
-                                </div>
+                                </div>  {% endcomment %}
                             </div>
                             <div class="header-slider-item">
-                                <img src="{% static 'img/slider-3.jpg' %}" alt="Slider Image" />
-                                <div class="header-slider-caption">
+                                <img src="{% static 'img/slider 3.jpg' %}" alt="Slider Image" />
+                               {% comment %} <div class="header-slider-caption">
                                     <p>Some text goes here that describes the image</p>
                                     <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Shop Now</a>
-                                </div>
+                                </div>  {% endcomment %}
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="header-img">
                             <div class="img-item">
-                                <img src="{% static 'img/category-1.jpg' %}" />
+                                <img src="{% static 'img/category1.jpg' %}" />
                                 <a class="img-text" href="">
-                                    <p>Some text goes here that describes the image</p>
+                                    {% comment %} <p>Some text goes here that describes the image</p> {% endcomment %}
                                 </a>
                             </div>
                             <div class="img-item">
-                                <img src="{% static 'img/category-2.jpg' %}" />
+                                <img src="{% static 'img/category2.jpg' %}" />
                                 <a class="img-text" href="">
-                                    <p>Some text goes here that describes the image</p>
+                                    {% comment %} <p>Some text goes here that describes the image</p> {% endcomment %}
                                 </a>
                             </div>
                         </div>
@@ -69,21 +69,7 @@
             </div>
         </div>
         <!-- Main Slider End -->      
-        
-        <!-- Brand Start -->
-        <div class="brand">
-            <div class="container-fluid">
-                <div class="brand-slider">
-                    <div class="brand-item"><img src="{% static 'img/brand-1.png' %}" alt=""></div>
-                    <div class="brand-item"><img src="{% static 'img/brand-2.png' %}" alt=""></div>
-                    <div class="brand-item"><img src="{% static 'img/brand-3.png' %}" alt=""></div>
-                    <div class="brand-item"><img src="{% static 'img/brand-4.png' %}" alt=""></div>
-                    <div class="brand-item"><img src="{% static 'img/brand-5.png' %}" alt=""></div>
-                    <div class="brand-item"><img src="{% static 'img/brand-6.png' %}" alt=""></div>
-                </div>
-            </div>
-        </div>
-        <!-- Brand End -->      
+          
         
         <!-- Feature Start-->
         <div class="feature">
@@ -214,10 +200,11 @@
                     <h1>Recent Product</h1>
                 </div>
                 <div class="row align-items-center product-slider product-slider-4">
+                    {% for item in recent_item %}
                     <div class="col-lg-3">
                         <div class="product-item">
                             <div class="product-title">
-                                <a href="#">Product Name</a>
+                                <a href="{% url 'core:menu_detail' item.mid %}">{{item.title}}</a>
                                 <div class="ratting">
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
@@ -228,7 +215,7 @@
                             </div>
                             <div class="product-image">
                                 <a href="product-detail.html">
-                                    <img src="{% static 'img/product-6.jpg' %}" alt="Product Image">
+                                    <img src="{{item.image.url}}" alt="Product Image">
                                 </a>
                                 <div class="product-action">
                                     <a href="#"><i class="fa fa-cart-plus"></i></a>
@@ -237,123 +224,12 @@
                                 </div>
                             </div>
                             <div class="product-price">
-                                <h3><span>$</span>99</h3>
+                                <h3><span>₵</span>{{item.price}}</h3>
                                 <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="product-item">
-                            <div class="product-title">
-                                <a href="#">Product Name</a>
-                                <div class="ratting">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                            </div>
-                            <div class="product-image">
-                                <a href="product-detail.html">
-                                    <img src="{% static 'img/product-7.jpg' %}" alt="Product Image">
-                                </a>
-                                <div class="product-action">
-                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
-                                    <a href="#"><i class="fa fa-heart"></i></a>
-                                    <a href="#"><i class="fa fa-search"></i></a>
-                                </div>
-                            </div>
-                            <div class="product-price">
-                                <h3><span>$</span>99</h3>
-                                <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="product-item">
-                            <div class="product-title">
-                                <a href="#">Product Name</a>
-                                <div class="ratting">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                            </div>
-                            <div class="product-image">
-                                <a href="product-detail.html">
-                                    <img src="{% static 'img/product-8.jpg' %}" alt="Product Image">
-                                </a>
-                                <div class="product-action">
-                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
-                                    <a href="#"><i class="fa fa-heart"></i></a>
-                                    <a href="#"><i class="fa fa-search"></i></a>
-                                </div>
-                            </div>
-                            <div class="product-price">
-                                <h3><span>$</span>99</h3>
-                                <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="product-item">
-                            <div class="product-title">
-                                <a href="#">Product Name</a>
-                                <div class="ratting">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                            </div>
-                            <div class="product-image">
-                                <a href="product-detail.html">
-                                    <img src="{% static 'img/product-9.jpg' %}" alt="Product Image">
-                                </a>
-                                <div class="product-action">
-                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
-                                    <a href="#"><i class="fa fa-heart"></i></a>
-                                    <a href="#"><i class="fa fa-search"></i></a>
-                                </div>
-                            </div>
-                            <div class="product-price">
-                                <h3><span>$</span>99</h3>
-                                <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="product-item">
-                            <div class="product-title">
-                                <a href="#">Product Name</a>
-                                <div class="ratting">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                            </div>
-                            <div class="product-image">
-                                <a href="product-detail.html">
-                                    <img src="{% static 'img/product-10.jpg' %}" alt="Product Image">
-                                </a>
-                                <div class="product-action">
-                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
-                                    <a href="#"><i class="fa fa-heart"></i></a>
-                                    <a href="#"><i class="fa fa-search"></i></a>
-                                </div>
-                            </div>
-                            <div class="product-price">
-                                <h3><span>$</span>99</h3>
-                                <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

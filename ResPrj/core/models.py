@@ -17,8 +17,16 @@ STATUS = (
     ("published","Published"),
 )
 
+RATINGS =(
+    (1, "✮☆☆☆☆"),
+    (2, "✮✮☆☆☆"),
+    (3, "✮✮✮☆☆"),
+    (4, "✮✮✮✮☆"),
+    (5, "✮✮✮✮✮"),
+)
+
 class Category(models.Model):
-    cid = models.UUIDField(default=uuid.uuid4,editable=False, unique = True )
+    cid = models.UUIDField(default=uuid.uuid4, editable=False, unique = True )
     title = models.CharField(max_length = 200)
     image = models.ImageField(upload_to="category_Images/")
     description = models.CharField(max_length = 300)
@@ -43,6 +51,7 @@ class MenuItem(models.Model):
     # old_price = models.DecimalField(max_digits=12, decimal_places=2)
     item_status = models.CharField(choices=STATUS, max_length=100, default="in_review")
     featured = models.BooleanField(default=False)
+    recent = models.BooleanField(default=False)
     description = RichTextUploadingField(null=True, blank=True)
     specification = RichTextUploadingField(null= True, blank = True)
 
@@ -61,7 +70,16 @@ class MenuImages(models.Model):
         return mark_safe('<img src= "%s" width = "50", height="50"/>' % (self.image.url))
 
 
+class MenuReview(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
     
+    def __str__(self):
+        return f'{self.name} - {self.created_at}'
+
 
 
 class contact(models.Model):
