@@ -1,5 +1,5 @@
 from django import forms
-from .models import contact, MenuReview
+from .models import contact, Review, RATINGS
 
 
 class contactForm(forms.ModelForm):
@@ -14,5 +14,12 @@ class MenuReviewForm(forms.ModelForm):
     
 
     class Meta:
-        model = MenuReview
-        fields = ['name', 'email', 'text']
+        model = Review
+        fields = ['name', 'email', 'text', 'rating']
+
+        widgets= {
+            'name': forms.TextInput(attrs={'placeholder': 'Name'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
+            'text': forms.Textarea(attrs={'placeholder': 'Write Review'}),
+            'rating': forms.Select(choices=RATINGS),
+        }

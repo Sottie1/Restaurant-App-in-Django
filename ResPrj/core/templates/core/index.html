@@ -13,7 +13,7 @@
                         <nav class="navbar bg-light">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#"><i class="fa fa-home"></i>Home</a>
+                                    <a class="nav-link" href="{% url 'core:home' %}"><i class="fa fa-home"></i>Home</a>
                                 </li>
                                 {% for c in categories %}
                                 <li class="nav-item">
@@ -28,24 +28,12 @@
                         <div class="header-slider normal-slider">
                             <div class="header-slider-item">
                                 <img src="{% static 'img/slider 1.jpg' %}" alt="Slider Image" />
-                                 {% comment %} <div class="header-slider-caption">
-                                    <p>Some text goes here that describes the image</p>
-                                    <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Shop Now</a>
-                                </div> {% endcomment %}
                             </div>
                             <div class="header-slider-item">
                                 <img src="{% static 'img/slider 2.jpg' %}" alt="Slider Image" />
-                                {% comment %} <div class="header-slider-caption">
-                                    <p>Some text goes here that describes the image</p>
-                                    <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Shop Now</a>
-                                </div>  {% endcomment %}
                             </div>
                             <div class="header-slider-item">
                                 <img src="{% static 'img/slider 3.jpg' %}" alt="Slider Image" />
-                               {% comment %} <div class="header-slider-caption">
-                                    <p>Some text goes here that describes the image</p>
-                                    <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Shop Now</a>
-                                </div>  {% endcomment %}
                             </div>
                         </div>
                     </div>
@@ -54,13 +42,11 @@
                             <div class="img-item">
                                 <img src="{% static 'img/category1.jpg' %}" />
                                 <a class="img-text" href="">
-                                    {% comment %} <p>Some text goes here that describes the image</p> {% endcomment %}
                                 </a>
                             </div>
                             <div class="img-item">
                                 <img src="{% static 'img/category2.jpg' %}" />
                                 <a class="img-text" href="">
-                                    {% comment %} <p>Some text goes here that describes the image</p> {% endcomment %}
                                 </a>
                             </div>
                         </div>
@@ -144,33 +130,31 @@
                         <div class="product-item">
                             <div class="product-title">
                                 <a href="{% url 'core:menu_detail' i.mid %}">{{i.title}}</a>
-                                <div class="ratting">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
                             </div>
                             <div class="product-image">
                                 <a href="{% url 'core:menu_detail' i.mid %}">
                                     <img src="{{i.image.url}}" alt="Product Image">
                                 </a>
                                 <div class="product-action">
-                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                    <form method="post" action="{% url 'core:add_to_cart' i.mid %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-cart-plus"></i> Add to Cart
+                                        </button>
+                                    </form>
                                     <a href="#"><i class="fa fa-heart"></i></a>
                                     <a href="#"><i class="fa fa-search"></i></a>
                                 </div>
                             </div>
                             <div class="product-price">
                                 <h3><span>₵</span>{{i.price}}</h3>
-                                <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
+                                <a class="btn" href="#"><i class="fa fa-shopping-cart"></i>Buy Now</a>
                             </div>
                         </div>
                     </div>
-                    
                     {% endfor %}
                 </div>
+                
             </div>
         </div>
         <!-- Featured Product End -->       

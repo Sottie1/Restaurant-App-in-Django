@@ -9,7 +9,7 @@
             <div class="col-lg-6">
                 <div class="login-form">
                     <div class="row">
-                        <form class="login-form" action="">
+                        <form class="login-form" action="" method="POST">
                             {% csrf_token %}
                             <div class="col-md-6">
                                 <label>E-mail / Username</label>
@@ -25,6 +25,7 @@
                                     <label class="custom-control-label" for="newaccount">Keep me signed in</label>
                                 </div>
                             </div>
+                            <p>Don't have an account?<a href="{% url 'userauths:signup' %}"> Register Here</a> </p>
                             <div class="col-md-12">
                                 <button type="submit" class="btn">Submit</button>
                             </div>

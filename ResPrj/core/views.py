@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from core.models import *
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import HttpResponse, JsonResponse
 from core.models import *
-from django.template.loader import render_to_string
-from django.urls import reverse
 from .forms import contactForm,MenuReviewForm
 from django.contrib.auth.decorators import login_required
+import uuid
+from django.contrib import messages
 
 
 
@@ -39,67 +38,62 @@ def menu_detail(request, mid):
 	menud = MenuItem.objects.get(mid=mid)
 	m_image =  menud.m_images.all()
 	menus = MenuItem.objects.filter(category=menud.category).exclude(mid=mid)
+	reviews = Review.objects.filter(menu_item=menud)
+	form = MenuReviewForm()
 
-	# review = MenuReview.objects.filter(menud=menud).order_by('-date')
-	# review_form = MenuReviewForm()
-	# make_review = True
-	# user_review_count = 0
+	make_review = True
 
-	# if request.user.is_authenticated:
-	# 	user_review_count = MenuReview.objects.filter(user=request.user, MenuItem=menud).count()
-
-	# if user_review_count > 0:
-	# 	make_review = False
-
-
+	
 	context = {
 		'menud':menud,
 		'm_images':m_image,
 		'menus':menus,
-		# 'review':review,
-		# 'make_review':make_review,
-		# 'review_form':review_form,
+		'reviews':reviews,
+		'form':form,
+		'make_review':make_review,
 	}
 	return render(request, "core/menu_detail.html", context)
 
-@login_required
-def submit_review(request):
-    if request.method == 'POST':
-        form = MenuReviewForm(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.user = request.user
-            review.save()
-            return redirect('core:menu_detail') 
-    else:
-        form = MenuReviewForm()
-    
-    context = {
-        'form': form,
-        'make_review': True
-    }
-    return render(request, 'core/menu_detail.html', context)
+
+def add_to_cart(request, mid):
+	menu_item = get_object_or_404(MenuItem, mid=mid)
+	cart, created = Cart.objects.get_or_create(user=request.user, active=True)
+
+
+	cart_item, created = CartItem.objects.get_or_create(cart=cart, menu_item=menu_item)
+	if not created:
+		cart_item.quantity += 1
+		cart_item.save()
+		messages.info(request, "Item quantity updated in your cart")
+	else:
+		messages.success(request, "Item added to your cart")
+
+	return redirect('core:cart')
+
+
 
 @login_required
-def submit_review(request):
+def submit_review(request, mid):
+    menu_item = get_object_or_404(MenuItem, mid=mid)
     if request.method == 'POST':
         form = MenuReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
             review.user = request.user
+            review.menu_item = menu_item
             review.save()
-            return redirect('reviews')  # Redirect to a success page or the same page
+            return redirect('core:menu_detail', mid=mid)
     else:
         form = MenuReviewForm()
-    
-    reviews = MenuReview.objects.all()  # Fetch all reviews or filter based on criteria
+
+    reviews = Review.objects.filter(menu_item=menu_item)
     context = {
         'form': form,
         'make_review': True,
         'reviews': reviews,
+        'menud': menu_item,
     }
     return render(request, 'core/menu_detail.html', context)
-
 
 def CategoryList(request):
 	categories = Category.objects.all()

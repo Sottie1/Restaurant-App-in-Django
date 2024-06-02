@@ -107,5 +107,5 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    messages.success(request, "User has been logged out.")
+    messages.success(request, "You has been logged out.")
     return redirect('core:home')

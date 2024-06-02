@@ -17,12 +17,19 @@ STATUS = (
     ("published","Published"),
 )
 
-RATINGS =(
+RATINGS =[
+   
     (1, "✮☆☆☆☆"),
     (2, "✮✮☆☆☆"),
     (3, "✮✮✮☆☆"),
     (4, "✮✮✮✮☆"),
     (5, "✮✮✮✮✮"),
+]
+
+STATUS_CHOICES = (
+    ("processing", "Processing"),
+    ("shipped", "Shipped"),
+    ("delivered","Delivered"),
 )
 
 class Category(models.Model):
@@ -48,7 +55,6 @@ class MenuItem(models.Model):
     category= models.ForeignKey(Category, on_delete=models.SET_NULL, null= True, related_name="category")
     image = models.ImageField(upload_to="menu_Images/")
     price = models.DecimalField(max_digits=9, decimal_places=2, default="0.00")
-    # old_price = models.DecimalField(max_digits=12, decimal_places=2)
     item_status = models.CharField(choices=STATUS, max_length=100, default="in_review")
     featured = models.BooleanField(default=False)
     recent = models.BooleanField(default=False)
@@ -57,6 +63,38 @@ class MenuItem(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(MenuItem, through='CartItem')
+    active = models.BooleanField(default=True)
+
+    def add_item(self, menu_item):
+        cart_item, created = CartItem.objects.get_or_create(cart=self, menu_item=menu_item)
+        if not created:
+            cart_item += 1
+            cart_item.save()
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+class Order(models.Model):
+    order_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    total_price = models.DecimalField(max_digits=9, decimal_places=2)
+    status = models.CharField(choices = STATUS_CHOICES, max_length=20)
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=9, decimal_places=2)
+
+
 
 class MenuImages(models.Model):
     images = models.ImageField(upload_to = "menu_sub_images")
@@ -68,17 +106,23 @@ class MenuImages(models.Model):
 
     def menu_image(self):
         return mark_safe('<img src= "%s" width = "50", height="50"/>' % (self.image.url))
+    
 
 
-class MenuReview(models.Model):
+
+
+
+class Review(models.Model):
+    menu_item = models.ForeignKey(MenuItem, related_name='reviews', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     email = models.EmailField()
     text = models.TextField()
+    rating = models.IntegerField(choices=RATINGS, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f'{self.name} - {self.created_at}'
+        return f'Review by {self.name} on {self.menu_item}'
 
 
 

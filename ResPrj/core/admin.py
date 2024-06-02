@@ -10,6 +10,9 @@ class MenuImagesAdmin(admin.TabularInline):
 class MenuItemsAdmin(admin.ModelAdmin):
     inlines = [MenuImagesAdmin]
     list_display = ['title', 'image', 'price', ]
+
+class cartAdmin(admin.ModelAdmin):
+     pass
     
 
 class contactAdmin(admin.ModelAdmin):
@@ -18,6 +21,11 @@ class contactAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
      list_display = ['title', 'image']
 
+class ReviewsAdmin(admin.ModelAdmin):
+     list_display = ['name', 'email', 'text', 'rating']
+
+
+
 
 
 
@@ -25,3 +33,4 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(MenuItem, MenuItemsAdmin)
 admin.site.register(contact, contactAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Review, ReviewsAdmin)
