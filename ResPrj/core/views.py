@@ -54,21 +54,34 @@ def menu_detail(request, mid):
 	}
 	return render(request, "core/menu_detail.html", context)
 
+@login_required
+def cart_view(request):
+    cart, created = Cart.objects.get_or_create(user=request.user, active=True)
+    cart_items = CartItem.objects.filter(cart=cart)
+    total_price = sum(item.menu_item.price * item.quantity for item in cart_items)
+    
+    context = {
+        'cart': cart,
+        'cart_items': cart_items,
+        'total_price': total_price
+    }
+    return render(request, 'core/cart.html', context)
 
-def add_to_cart(request, mid):
-	menu_item = get_object_or_404(MenuItem, mid=mid)
-	cart, created = Cart.objects.get_or_create(user=request.user, active=True)
+
+# def add_to_cart(request, mid):
+# 	menu_item = get_object_or_404(MenuItem, mid=mid)
+# 	cart, created = Cart.objects.get_or_create(user=request.user, active=True)
 
 
-	cart_item, created = CartItem.objects.get_or_create(cart=cart, menu_item=menu_item)
-	if not created:
-		cart_item.quantity += 1
-		cart_item.save()
-		messages.info(request, "Item quantity updated in your cart")
-	else:
-		messages.success(request, "Item added to your cart")
+# 	cart_item, created = CartItem.objects.get_or_create(cart=cart, menu_item=menu_item)
+# 	if not created:
+# 		cart_item.quantity += 1
+# 		cart_item.save()
+# 		messages.info(request, "Item quantity updated in your cart")
+# 	else:
+# 		messages.success(request, "Item added to your cart")
 
-	return redirect('core:cart')
+# 	return redirect('core:cart')
 
 
 

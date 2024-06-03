@@ -21,7 +21,8 @@ urlpatterns = [
     path('submit-review/<uuid:mid>/', submit_review, name='submit_review'),
     
 	############## Cart ##############
-    path("add_to_cart/<uuid:mid>/", add_to_cart, name="add_to_cart"),
+    path("cart/", cart_view, name="cart_view"),
+    # path("add_to_cart/<uuid:mid>/", add_to_cart, name="add_to_cart"),
 	
     
 	path("login/", login, name="login"),

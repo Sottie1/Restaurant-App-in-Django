@@ -12,8 +12,17 @@ class MenuItemsAdmin(admin.ModelAdmin):
     list_display = ['title', 'image', 'price', ]
 
 class cartAdmin(admin.ModelAdmin):
-     pass
-    
+     list_display= ['user', 'active']
+
+
+class CartItemAdmin(admin.ModelAdmin):
+     list_display = ['cart', 'menu_item', 'quantity']
+
+class OrderAdmin(admin.ModelAdmin):
+     list_display = ['user', 'total_price', 'status', 'created_at']
+
+class OrderItemAdmin(admin.ModelAdmin):
+     list_display = ['order', 'quantity', 'price']
 
 class contactAdmin(admin.ModelAdmin):
 	list_display = ['name', 'email', 'phone', 'subject', 'message']
@@ -31,6 +40,10 @@ class ReviewsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(MenuItem, MenuItemsAdmin)
+admin.site.register(Cart, cartAdmin)
+admin.site.register(CartItem, CartItemAdmin)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderItem, OrderItemAdmin)
 admin.site.register(contact, contactAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Review, ReviewsAdmin)
