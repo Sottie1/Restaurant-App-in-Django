@@ -22,13 +22,16 @@ urlpatterns = [
     
 	############## Cart ##############
     path("cart/", cart_view, name="cart_view"),
-    # path("add_to_cart/<uuid:mid>/", add_to_cart, name="add_to_cart"),
+    
+    path("add_to_cart/<uuid:item_id>/", add_to_cart, name="add_to_cart"),
+	path('update-cart-item/<int:item_id>/', update_cart_item, name='update_cart_item'),
+    path('remove-cart-item/<int:item_id>/', remove_cart_item, name='remove_cart_item'),
 	
     
-	path("login/", login, name="login"),
-	path("signup/", signup, name="signup"),
+	# path("login/", login, name="login"),
+	# path("signup/", signup, name="signup"),
     
-	path("contact/", contactUs, name="contactUs"),
+	# path("contact/", contactUs, name="contactUs"),
    
     
 ]

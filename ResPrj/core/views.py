@@ -6,6 +6,8 @@ from .forms import contactForm,MenuReviewForm
 from django.contrib.auth.decorators import login_required
 import uuid
 from django.contrib import messages
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 
 
@@ -54,6 +56,24 @@ def menu_detail(request, mid):
 	}
 	return render(request, "core/menu_detail.html", context)
 
+
+
+def add_to_cart(request, item_id):
+    if not request.user.is_authenticated:
+        messages.warning(request, "You need to be logged in to add items to the cart.")
+        return redirect('userauths:login')  
+
+    menu_item = get_object_or_404(MenuItem, mid=item_id)
+    cart, created = Cart.objects.get_or_create(user=request.user, active=True)
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, menu_item=menu_item)
+
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    messages.success(request, "Item added to cart successfully.")
+    return redirect('core:cart_view')
+
 @login_required
 def cart_view(request):
     cart, created = Cart.objects.get_or_create(user=request.user, active=True)
@@ -67,21 +87,28 @@ def cart_view(request):
     }
     return render(request, 'core/cart.html', context)
 
+@login_required
+@require_POST
+def update_cart_item(request, item_id):
+    data = json.loads(request.body)
+    delta = data.get('delta', 0)
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user, cart__active=True)
+    if cart_item.quantity + delta > 0:
+        cart_item.quantity += delta
+        cart_item.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
 
-# def add_to_cart(request, mid):
-# 	menu_item = get_object_or_404(MenuItem, mid=mid)
-# 	cart, created = Cart.objects.get_or_create(user=request.user, active=True)
 
 
-# 	cart_item, created = CartItem.objects.get_or_create(cart=cart, menu_item=menu_item)
-# 	if not created:
-# 		cart_item.quantity += 1
-# 		cart_item.save()
-# 		messages.info(request, "Item quantity updated in your cart")
-# 	else:
-# 		messages.success(request, "Item added to your cart")
+@login_required
+@require_POST
+def remove_cart_item(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user, cart__active=True)
+    cart_item.delete()
+    return JsonResponse({'success': True})
 
-# 	return redirect('core:cart')
+
 
 
 

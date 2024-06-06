@@ -81,6 +81,14 @@
             </div>
         </div>
         <!-- Nav Bar End -->      
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
         
         <!-- Bottom Bar Start -->
         <div class="bottom-bar">
@@ -105,9 +113,9 @@
                                 <i class="fa fa-heart"></i>
                                 <span>(0)</span>
                             </a>
-                            <a href="cart.html" class="btn cart">
+                            <a href="{% url 'core:cart_view' %}" class="btn cart" id="cart-count">
                                 <i class="fa fa-shopping-cart"></i>
-                                <span>(0)</span>
+                            <span>({{ cart_view.item_count }})</span>
                             </a>
                         </div>
                     </div>
@@ -122,18 +130,26 @@
                     {% endfor %}
                 </div>
                 {% endif %}
-                <script>
-                    $(document).ready(function() {
-                     setTimeout(function() {
-                        $('.alert').fadeOut('slow');
-                    }, 3000);
-                    });
-                </script>
+               
         </div>
         <!-- Bottom Bar End -->    
  {% block content%}
  
  {% endblock content %}
+
+ <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all message elements
+        const messages = document.querySelectorAll('.messages .alert');
+
+        // Hide each message after 10 seconds (10000 milliseconds)
+        messages.forEach(function(message) {
+            setTimeout(function() {
+                message.style.display = 'none';
+            }, 10000); // 10000 milliseconds = 10 seconds
+        });
+    });
+</script>
  <!-- footer section -->
  
         <!-- Footer Start -->
@@ -237,5 +253,8 @@
         
         <!-- Template Javascript -->
         <script src="{% static 'js/main.js' %}"></script>
+
+
+        
     </body>
 </html>
