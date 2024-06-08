@@ -58,20 +58,18 @@ def menu_detail(request, mid):
 
 
 
+@login_required
 def add_to_cart(request, item_id):
-    if not request.user.is_authenticated:
-        messages.warning(request, "You need to be logged in to add items to the cart.")
-        return redirect('userauths:login')  
+    user = request.user
+    menu_item = get_object_or_404(MenuItem, id=item_id)
+    cart, created = Cart.objects.get_or_create(user=user, active=True)
 
-    menu_item = get_object_or_404(MenuItem, mid=item_id)
-    cart, created = Cart.objects.get_or_create(user=request.user, active=True)
     cart_item, created = CartItem.objects.get_or_create(cart=cart, menu_item=menu_item)
-
     if not created:
         cart_item.quantity += 1
-        cart_item.save()
+    cart_item.save()
 
-    messages.success(request, "Item added to cart successfully.")
+    messages.success(request, f"{menu_item.title} added to cart.")
     return redirect('core:cart_view')
 
 @login_required
@@ -88,26 +86,48 @@ def cart_view(request):
     return render(request, 'core/cart.html', context)
 
 @login_required
-@require_POST
 def update_cart_item(request, item_id):
-    data = json.loads(request.body)
-    delta = data.get('delta', 0)
-    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user, cart__active=True)
-    if cart_item.quantity + delta > 0:
-        cart_item.quantity += delta
-        cart_item.save()
-        return JsonResponse({'success': True})
+    if request.method == 'POST':
+        try:
+            cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+            delta = int(request.POST.get('delta', 0))
+            cart_item.quantity += delta
+            if cart_item.quantity <= 0:
+                cart_item.delete()
+            else:
+                cart_item.save()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'success': False})
+    return JsonResponse({'success': False})
+
+@login_required
+def set_cart_item_quantity(request, item_id):
+    if request.method == 'POST':
+        try:
+            cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+            quantity = int(request.POST.get('quantity', 0))
+            if quantity > 0:
+                cart_item.quantity = quantity
+                cart_item.save()
+            else:
+                cart_item.delete()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'success': False})
     return JsonResponse({'success': False})
 
 
-
 @login_required
-@require_POST
 def remove_cart_item(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user, cart__active=True)
-    cart_item.delete()
-    return JsonResponse({'success': True})
-
+    if request.method == 'POST':
+        cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+        cart_item.delete()
+        messages.success(request, "Item removed from cart successfully.")
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
 
 
 
